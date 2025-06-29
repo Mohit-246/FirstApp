@@ -1,49 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
 
 function LandingPage() {
+
+
   const [articles, setArticles] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('https://newsdata.io/api/1/news?apikey=pub_9b1a8674c077487f8091a9c06148c4ed=India ')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data.results)
-        setArticles(data.results)
-        })
-      .catch(error => console.error("Error in fetching news", error));
-  }, []);
-
+       const fetchNews = () => {
+            fetch('https://newsdata.io/api/1/news?apikey=pub_9b1a8674c077487f8091a9c06148c4ed&q=India')
+            .then(response => response.json())
+            .then(data => {
+              console.log(data)
+              setArticles(data.results)
+            })
+            .catch(error => {
+              console.log("Error in fetching news", error)
+            })
+       }
+       fetchNews();
+  }, [])
   return (
-    <div className="landing">
-      <header className="landing-header">
-        <div className="logo">
-          <img src="https://img.icons8.com/color/48/news.png" alt="NewsMate" />
-          <h1>NewsMate</h1>
-        </div>
-        <nav>
-          <button onClick={() => navigate('/')}>Home</button>
-          <button onClick={() => navigate('/login')}>Login</button>
-          <button onClick={() => navigate('/register')}>Register</button>
-        </nav>
-      </header>
+    <div style={{padding: '0 2%'}}>
+         <div className='landing-header flex'>
+               <div className='flex'>
+                  <img width="48" height="48" src="https://img.icons8.com/color/48/news.png" alt="news"/>
+                  <h3>NewsMate</h3>
+               </div>
 
-      <section className="top-news">
-        <h2>Top News</h2>
-        <div className="articles">
-          {articles.map((article, id) => (
-            <div className="news-card" key={id}>
-              <img src={article.source_icon} alt={article.title} />
-              <h3>{article.title}</h3>
-              <p>{article.description}</p>
-              <a href={article.link} target="_blank" rel="noopener noreferrer">Read more</a>
-            </div>
-          ))}
-        </div>
-      </section>
+               <div className='landing-btns'>
+                   <button>Home</button>
+                   <button>Login</button>
+                   <button>Register</button>
+               </div>
+         </div>
+
+         <div>
+            <h2>| TOP NEWS</h2>
+         </div>
+
+         <div className='article-container'>
+               {articles && articles.map((article, id) => (
+                   <div className='news-card'> 
+                       <h4>{article.title}</h4>
+                       <img src={article.source_url} alt='' width={300}/>
+                       <p>{article.content}</p>
+                    </div>
+               ))}
+         </div>
     </div>
-  );
+  )
 }
 
-export default LandingPage;
+export default LandingPage
